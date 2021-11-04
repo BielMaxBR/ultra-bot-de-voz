@@ -1,7 +1,7 @@
 import { Client } from "discord.js"
 import { joinVoiceChannel } from "@discordjs/voice"
 import dotenv from 'dotenv'
-import { lookup } from "dns"
+
 dotenv.config()
 
 var connection
