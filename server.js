@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.get('/', (req, res) => {
     var session = req.session;
-    if (session.userid) {
+    if (session) {
         res.send("Welcome User <a href=\'/logout'>click to logout</a>");
     } else
         res.sendFile('html/index.html', { root: "./" })
@@ -28,7 +28,7 @@ app.get('/', (req, res) => {
 
 app.get('/login', (req,res) => {
     var session = req.session;
-    if (session.userid) {
+    if (session) {
         // login direto
         res.send('calma calma')
     }
