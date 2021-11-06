@@ -26,15 +26,14 @@ app.get('/', (req, res) => {
     if (session && db[req.sessionID]) {
         res.send("Welcome User <a href=\'/logout'>click to logout</a>");
     } else {
-        res.sendFile('html/index.html', { root: "./" })
+        res.sendFile('/client/index.html', { root: "./" })
     }
 })
 
 app.get('/login', (req,res) => {
-    var session = req.session
-    if (false) {
+    if (db[req.sessionId]) {
         // login direto
-        res.send('calma calma')
+        res.redirect('/');
     }
     else {
         res.redirect(process.env.LOGINURL)
@@ -51,7 +50,6 @@ app.get('/logout',(req,res) => {
 
 app.get('/createSession', async (req, res) => {
     const {code} = req.query
-    console.log(code)
     if (code) {
         try {
 			const oauthResult = await fetch('https://discord.com/api/oauth2/token', {

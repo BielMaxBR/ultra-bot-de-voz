@@ -1,5 +1,5 @@
-import client from './bot.js'
-import app from './server.js'
+import client from './bot/bot.js'
+import app from './server/server.js'
 
 import dotenv from 'dotenv'
 dotenv.config()
