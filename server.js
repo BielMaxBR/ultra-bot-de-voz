@@ -18,23 +18,35 @@ app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+// testes
+var db = {}
+
 app.get('/', (req, res) => {
-    var session = req.session;
-    if (session) {
+    var session = req.session
+    if (session && db[req.sessionID]) {
         res.send("Welcome User <a href=\'/logout'>click to logout</a>");
-    } else
+    } else {
         res.sendFile('html/index.html', { root: "./" })
+    }
 })
 
 app.get('/login', (req,res) => {
-    var session = req.session;
-    if (session) {
+    var session = req.session
+    if (false) {
         // login direto
         res.send('calma calma')
     }
     else {
         res.redirect(process.env.LOGINURL)
     }
+})
+
+app.get('/logout',(req,res) => {
+    if (db[req.sessionID]) {
+        delete db[req.sessionID]
+    }
+    req.session.destroy();
+    res.redirect('/');
 })
 
 app.get('/createSession', async (req, res) => {
@@ -49,19 +61,21 @@ app.get('/createSession', async (req, res) => {
 					client_secret: process.env.CLIENTSECRET,
 					code,
 					grant_type: 'authorization_code',
-					redirect_uri: `http://localhost:${process.env.PORT || 3000}/createSession`,
-					scope: 'identify',
+					redirect_uri: process.env.REDIRECTURI,
+					scope: 'identify guilds',
 				}),
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded',
 				},
-			});
+			})
 
-			const oauthData = await oauthResult.json();
-    
-			console.log(oauthData);
+			const oauthData = await oauthResult.json()
+
+            if (oauthData.access_token) {
+                db[req.sessionID] = oauthData.access_token
+            }
 		} catch (error) {
-			console.error(error);
+			console.error(error)
 		}
     }
 
