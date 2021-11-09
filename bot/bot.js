@@ -8,7 +8,7 @@ const client = new SapphireClient({
 })
 
 client.on('ready', _ => {
-    console.log("começou")
+    console.log("bot iniciado")
 })
 
 // client.on('messageCreate', message => {
