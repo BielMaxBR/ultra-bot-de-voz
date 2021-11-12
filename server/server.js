@@ -17,6 +17,7 @@ app.use(sessions({
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(express.static("./"))
 
 // testes
 var db = {}
@@ -24,7 +25,8 @@ var db = {}
 app.get('/', (req, res) => {
     var session = req.session
     if (session && db[req.sessionID]) {
-        res.send("Welcome User <a href=\'/logout'>click to logout</a>");
+        //res.send("Welcome User <a href=\'/logout'>click to logout</a>");
+        res.redirect('/client/html/a.html')
     } else {
         res.sendFile('/client/index.html', { root: "./" })
     }
