@@ -17,7 +17,7 @@ app.use(sessions({
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static("./"))
+app.use(express.static("./client"))
 
 // testes
 var db = {}
@@ -28,8 +28,12 @@ app.get('/', (req, res) => {
         //res.send("Welcome User <a href=\'/logout'>click to logout</a>");
         res.redirect('/client/html/a.html')
     } else {
-        res.sendFile('/client/index.html', { root: "./" })
+        res.sendFile('/client/index.html', { root: "./client" })
     }
+})
+
+app.get('/test', (req, res) => {
+    res.sendFile('/client/html/index.html', { root: "./client/html" })
 })
 
 app.get('/login', (req,res) => {
