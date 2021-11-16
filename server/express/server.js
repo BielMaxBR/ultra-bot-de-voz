@@ -36,7 +36,7 @@ app.get('/test', (req, res) => {
     res.sendFile('/client/html/index.html', { root: "./client/html" })
 })
 
-app.get('/login', (req,res) => {
+app.get('/login', (req, res) => {
     if (db[req.sessionId]) {
         // login direto
         res.redirect('/');
@@ -46,7 +46,7 @@ app.get('/login', (req,res) => {
     }
 })
 
-app.get('/logout',(req,res) => {
+app.get('/logout', (req, res) => {
     if (db[req.sessionID]) {
         delete db[req.sessionID]
     }
@@ -55,32 +55,32 @@ app.get('/logout',(req,res) => {
 })
 
 app.get('/createSession', async (req, res) => {
-    const {code} = req.query
+    const { code } = req.query
     if (code) {
         try {
-			const oauthResult = await fetch('https://discord.com/api/oauth2/token', {
-				method: 'POST',
-				body: new URLSearchParams({
-					client_id: process.env.CLIENTID,
-					client_secret: process.env.CLIENTSECRET,
-					code,
-					grant_type: 'authorization_code',
-					redirect_uri: process.env.REDIRECTURI,
-					scope: 'identify guilds',
-				}),
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-				},
-			})
+            const oauthResult = await fetch('https://discord.com/api/oauth2/token', {
+                method: 'POST',
+                body: new URLSearchParams({
+                    client_id: process.env.CLIENTID,
+                    client_secret: process.env.CLIENTSECRET,
+                    code,
+                    grant_type: 'authorization_code',
+                    redirect_uri: process.env.REDIRECTURI,
+                    scope: 'identify guilds',
+                }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            })
 
-			const oauthData = await oauthResult.json()
+            const oauthData = await oauthResult.json()
 
             if (oauthData.access_token) {
                 db[req.sessionID] = oauthData.access_token
             }
-		} catch (error) {
-			console.error(error)
-		}
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     res.redirect('/')

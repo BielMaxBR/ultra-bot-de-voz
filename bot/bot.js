@@ -16,7 +16,7 @@ client.on('ready', _ => {
 //     if (message.content == "entre") {
 //         const channel = message.member.voice.channel
 //         if (connection != null) return
-        
+
 //         connection = joinVoiceChannel({
 //             channelId: channel.id,
 //             guildId: channel.guild.id,
