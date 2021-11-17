@@ -2,14 +2,15 @@ import express from "express"
 import cookieParser from 'cookie-parser'
 import sessions from "express-session"
 import http from "http"
-import router from "./router.js"
+import wss from "./websockets/wss.js";
+import { tinyws } from "tinyws"
 
 import dotenv from 'dotenv'
 dotenv.config()
 
-var app = express()
+const app = express()
 
-var server = http.createServer(app)
+const server = http.createServer(app)
 
 const sessionParser = sessions({
     secret: "senhasecretaqueninguemdeveriasaber",
@@ -18,14 +19,21 @@ const sessionParser = sessions({
     resave: false
 })
 
-
 app.use(sessionParser)
+app.use(tinyws())
+app.use('/ws', async (req, res) => {
+    if (req.ws) {
+        const ws = await req.ws()
 
-app.use(router)
+        wss(ws, req)
+    } else {
+        res.send('porque vc ta aqui?')
+    }
+})
 app.use(cookieParser())
 app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
 app.use(express.static("./client"))
+app.use(express.urlencoded({ extended: true }))
 
 
 export { app as default, server }
