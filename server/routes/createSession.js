@@ -1,4 +1,5 @@
 import fetch from 'node-fetch'
+import redis from '../redisClient.js'
 
 export default async (req, res) => {
     const { code } = req.query
@@ -22,7 +23,8 @@ export default async (req, res) => {
             const oauthData = await oauthResult.json()
 
             if (oauthData.access_token) {
-                app.db[req.sessionID] = oauthData.access_token
+                await redis.set("Sessions", req.sessionID, oauthData.access_token)
+                console.log(await redis.set("Sessions", req.sessionID, oauthData.access_token))
             }
         } catch (error) {
             console.error(error)

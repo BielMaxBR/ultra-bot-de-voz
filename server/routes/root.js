@@ -1,9 +1,13 @@
-export default (req, res) => {
+import redis from "../redisClient.js"
+
+
+export default async (req, res) => {
     var session = req.session
-    if (session && app.db[req.sessionID]) {
+    console.log("a")
+    if (session && await redis.get("Sessions", req.sessionId)) {
         //res.send("Welcome User <a href=\'/logout'>click to logout</a>");
-        res.redirect('/client/html/a.html')
+        res.redirect('/html/index.html')
     } else {
-        res.sendFile('/client/index.html', { root: "./client" })
+        res.sendFile('/index.html', { root: "./client" })
     }
 }

@@ -6,6 +6,7 @@ import wss from "./websockets/wss.js";
 import { tinyws } from "tinyws"
 
 import dotenv from 'dotenv'
+import router from "./router.js";
 dotenv.config()
 
 const app = express()
@@ -30,6 +31,7 @@ app.use('/ws', async (req, res) => {
         res.send('porque vc ta aqui?')
     }
 })
+app.use(router)
 app.use(cookieParser())
 app.use(express.json())
 app.use(express.static("./client"))
