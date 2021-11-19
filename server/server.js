@@ -6,21 +6,23 @@ import wss from "./websockets/wss.js";
 import { tinyws } from "tinyws"
 
 import dotenv from 'dotenv'
-import router from "./router.js";
 dotenv.config()
+
+import router from "./router.js";
 
 const app = express()
 
 const server = http.createServer(app)
 
-const sessionParser = sessions({
+app.use(cookieParser())
+app.use(sessions({
     secret: "senhasecretaqueninguemdeveriasaber",
     saveUninitialized: true,
     cookie: { maxAge: parseInt(process.env.MAXAGE) },
     resave: false
 })
+)
 
-app.use(sessionParser)
 app.use(tinyws())
 app.use('/ws', async (req, res) => {
     if (req.ws) {
@@ -31,11 +33,9 @@ app.use('/ws', async (req, res) => {
         res.send('porque vc ta aqui?')
     }
 })
-app.use(router)
-app.use(cookieParser())
 app.use(express.json())
-app.use(express.static("./client"))
+app.use('/assets', express.static('./client/game'))
 app.use(express.urlencoded({ extended: true }))
-
+app.use(router)
 
 export { app as default, server }

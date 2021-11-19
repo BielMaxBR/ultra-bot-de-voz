@@ -8,11 +8,12 @@ const client = createClient({
     password: process.env.REDIS_PASSWORD,
 });
 
+const redis = {}
 client.on('ready', () => {
     console.log('redis conectado')
+    client.del("Sessions")
 })
 
-const redis = {}
 redis.get = (dataName, key) => {
     return new Promise((resolve) => {
         client.hget(dataName, key, (err, data) => {
@@ -37,12 +38,12 @@ redis.set = (dataName, key, newData) => {
 }
 redis.del = (dataName, key) => {
     return new Promise((resolve) => {
-        client.hdel(dataName, key, (err) => {
+        client.hdel(dataName, key, (err, reply) => {
             if (err) {
                 resolve(undefined)
                 return
             }
-            resolve("done")
+            resolve(reply)
         })
     })
 }
