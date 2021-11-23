@@ -1,9 +1,9 @@
-import { SapphireClient } from '@sapphire/framework'
+import { Client } from "discord.js"
 import { joinVoiceChannel } from "@discordjs/voice"
 
 var connection
 
-const client = new SapphireClient({
+const client = new Client({
     intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_VOICE_STATES']
 })
 
