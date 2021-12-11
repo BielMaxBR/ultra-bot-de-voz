@@ -1,21 +1,25 @@
-import express from "express"
+import connectRedis from "connect-redis"
 import cookieParser from 'cookie-parser'
-import sessions from "express-session"
-import http from "http"
-import wss from "./websockets/wss.js";
 import { tinyws } from "tinyws"
+import sessions from "express-session"
+import express from "express"
+import http from "http"
 
 import dotenv from 'dotenv'
 dotenv.config()
 
 import router from "./router.js";
+import {redisClient} from "./redisClient.js"
+import wss from "./websockets/wss.js";
 
 const app = express()
 
 const server = http.createServer(app)
+const RedisStore = connectRedis(sessions)
 
 app.use(cookieParser())
 app.use(sessions({
+    store: new RedisStore({ client: redisClient }),
     secret: "senhasecretaqueninguemdeveriasaber",
     saveUninitialized: true,
     cookie: { maxAge: parseInt(process.env.MAXAGE) },
@@ -34,7 +38,7 @@ app.use('/ws', async (req, res) => {
     }
 })
 app.use(express.json())
-app.use('/assets', express.static('./client/game'))
+app.use("/assets", express.static('./client/game'))
 app.use(express.urlencoded({ extended: true }))
 app.use(router)
 

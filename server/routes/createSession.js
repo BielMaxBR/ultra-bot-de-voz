@@ -24,7 +24,7 @@ export default async (req, res) => {
 
             if (oauthData.access_token) {
                 await redis.set("Sessions", req.sessionID, oauthData.access_token)
-                console.log(await redis.set("Sessions", req.sessionID, oauthData.access_token))
+                //console.log(await redis.set("Sessions", req.sessionID, oauthData.access_token))
             }
         } catch (error) {
             console.error(error)

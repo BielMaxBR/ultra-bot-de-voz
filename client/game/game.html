@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game</title>
+
+    <style>
+        body {
+            background-color: #0067b9;
+        }
+
+        .loading {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #0067b9;
+            margin: 0px;
+            left: 0px;
+            top: 0px;
+        }
+
+        #screen {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="screen"></canvas>
+    <div class="loading"><a>carregando...</a></div>
+
+    <script src="/assets/game.js"></script>
+    <script>
+        var canvas = document.getElementById("screen")
+        var loadingScreen = document.querySelector(".loading")
+
+        function onProgress(current, total) {
+            console.log(`${current} de ${total}`)
+            if (current == total) {
+                loadingScreen.style.display = "none"
+                canvas.style.display = "block"
+            }
+        }
+        const godotConfig = {"args":[],"canvasResizePolicy":2,"executable":"game","experimentalVK":false,"fileSizes":{"game.pck":64480,"game.wasm":13328615},"focusCanvas":true,"gdnativeLibs":[]}
+        const myWasm = 'game';
+        const myPck = 'game.pck';
+
+        const engine = new Engine({ onProgress, fileSizes: godotConfig.fileSizes });
+        Promise.all([
+            // Load and init the engine
+            engine.init("/assets/"+myWasm),
+            // And the pck concurrently
+            engine.preloadFile("/assets/"+myPck),
+        ]).then(() => {
+            // Now start the engine.
+
+            return engine.start({
+                args: ['--main-pack', myPck],
+                canvas
+            });
+        }).then(() => {
+            console.log('Engine has started!');
+            console.log(godotConfig)
+        });
+
+    </script>
+</body>
+
+</html>
