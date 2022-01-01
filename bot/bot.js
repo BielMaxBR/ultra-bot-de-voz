@@ -1,15 +1,15 @@
-import { Client } from "discord.js"
-import { joinVoiceChannel } from "@discordjs/voice"
+import { Client, Intents } from "discord.js"
 
-var connection
+import readyEvent from "./events/ready.event.js"
+import interactionCreateEvent from "./events/interactionCreate.event.js"
+
 
 const client = new Client({
-    intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_VOICE_STATES']
+    intents: [Intents.FLAGS.GUILDS]
 })
 
-client.on('ready', _ => {
-    console.log("bot iniciado")
-})
+client.on('ready', readyEvent)
+client.on('interactionCreate', interactionCreateEvent);
 
 // client.on('messageCreate', message => {
 //     // console.log(message.member.voice)
