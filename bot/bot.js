@@ -1,16 +1,23 @@
-import { Client, Intents } from "discord.js"
+import { Intents } from "discord.js"
+import Client from "./classes/Client.class.js"
+import dotenv from 'dotenv'
+dotenv.config()
 
-import readyEvent from "./events/ready.event.js"
-import interactionCreateEvent from "./events/interactionCreate.event.js"
-
+import { dirname } from "dirname-filename-esm"
+import reloadCommandsUtils from "./utils/reloadCommands.utils.js"
+const __dirname = dirname(import.meta)
 
 const client = new Client({
     intents: [Intents.FLAGS.GUILDS]
 })
 
-client.on('ready', readyEvent)
-client.on('interactionCreate', interactionCreateEvent);
 
+const loadedCommands = client.loadCommands('commands', __dirname)
+const loadedEvents = client.loadEvents('events', __dirname)
+
+Promise.all([loadedCommands, loadedEvents]).then(_ => {
+    reloadCommandsUtils(client)
+})
 // client.on('messageCreate', message => {
 //     // console.log(message.member.voice)
 //     if (message.content == "entre") {
