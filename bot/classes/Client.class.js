@@ -38,7 +38,7 @@ export default class Client extends DiscordClient {
                     if (file.endsWith('.js')) {
                         const imported = await import('../' + filePath)
                         const command = imported.default
-                        this.commands.set(command.name, command)
+                        this.commands.set(command.builder.name, command)
                     }
                 }
                 console.log('comandos carregados')
@@ -60,7 +60,7 @@ export default class Client extends DiscordClient {
                     const fileStatus = lstatSync(`${root}/${filePath}`)
 
                     if (fileStatus.isDirectory()) {
-                        this.loadCommands(filePath, root)
+                        this.loadEvents(filePath, root)
                         continue
                     }
 
