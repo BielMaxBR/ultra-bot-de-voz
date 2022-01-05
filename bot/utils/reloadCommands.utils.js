@@ -11,24 +11,34 @@ export default async client => {
 
     client.commands.forEach((value) => {
         commands.push(value.builder.toJSON())
-        console.log('carregando comando:', Object.keys(value))
+        console.log('carregando comando:', value.builder.name)
     });
 
-    console.log(commands)
-
     try {
-        console.log('recarregando comandos no client');
+        console.log('enviando comandos pro discord...');
 
-        // console.log(await rest.get(
-        //     Routes.applicationCommands(process.env.CLIENTID)
-        // ))
+        if (process.env.TEST) {
 
-        console.log(await rest.put(
-            Routes.applicationCommands(process.env.CLIENTID),
-            { body: commands },
-        ))
+            for (const command of await rest.get(
+                Routes.applicationGuildCommands(process.env.CLIENTID, process.env.TESTSERVER)
+            )) {
+                await rest.delete(
+                    Routes.applicationGuildCommand(process.env.CLIENTID, process.env.TESTSERVER, command.id)
+                )
+            }
 
-        console.log('comandos recarregados no client');
+            await rest.put(
+                Routes.applicationGuildCommands(process.env.CLIENTID, process.env.TESTSERVER),
+                { body: commands },
+            )
+        } else {
+            await rest.put(
+                Routes.applicationCommands(process.env.CLIENTID),
+                { body: commands },
+            )
+        }
+
+        console.log('comandos enviados pro discord com sucesso');
     } catch (error) {
         console.error(error);
     }
