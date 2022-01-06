@@ -19,13 +19,13 @@ export default async client => {
 
         if (process.env.TEST) {
 
-            for (const command of await rest.get(
-                Routes.applicationGuildCommands(process.env.CLIENTID, process.env.TESTSERVER)
-            )) {
-                await rest.delete(
-                    Routes.applicationGuildCommand(process.env.CLIENTID, process.env.TESTSERVER, command.id)
-                )
-            }
+            // for (const command of await rest.get(
+            //     Routes.applicationGuildCommands(process.env.CLIENTID, process.env.TESTSERVER)
+            // )) {
+            //     await rest.delete(
+            //         Routes.applicationGuildCommand(process.env.CLIENTID, process.env.TESTSERVER, command.id)
+            //     )
+            // }
 
             await rest.put(
                 Routes.applicationGuildCommands(process.env.CLIENTID, process.env.TESTSERVER),
